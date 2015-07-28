@@ -1,0 +1,47 @@
+## GIT TRAINING
+
+* What is a SCM / VCS
+* What is a DVCS: SQL database (CAP theorem), filesystem
+* Origin of Git: Torvalds (Linux, filesystems...); BitKeeper (not free for kernel devs, etc)
+
+* Commits: chain that points to the previous.
+  - (This also of: linked lists)
+  - There is a "root commit": just the fist commit you've made
+* Commits: stagin area
+	TODO
+* Git objects:
+  - blob: full files, not just delta. Faster on branching, saves ass sometimes.
+  - tree: why can't commit an empty directory. Tree as collection of blobs.
+  - commit: metadata of a tree. SHA1 identified and which data in them:
+    - SHA1: what is an hash function?
+	- inside the hash: date, author, committer, commit message, SHA1 or parent(s).
+	- why author and committer? To merge from someone else (review).
+  - tag: alias on SHA1
+
+* Graph theory to undertstand Git
+  - Commits create an acyclic directed graph
+  - (Like a filesystem with symlinks)
+  - Which command to...? Figure out what you want to do to the graph, translate into git terms, google.
+
+* Branches:
+  - Master is a branch like any other, just only conventional name
+    - Same as SVN with trunk.
+  - As it's a branch, it's just an alias to a commit (and its tree).
+    - Any other branch would be the same
+  - A merge commit it's a commit with more than 1 parent. The names of the branches are in metadata.
+    - You can easily make branches of branches.
+  - Deleting a branch: removes the alias/label. If the commits are not merged, can be GC'ed.
+* Currently checked out branch: there is a symlink HEAD to the name of the branch.
+  - Switching branch is as easy as chaning this symlink.
+* Tags: a branch moves every commit, tags remain still.
+  - We won't use tags. (or...? Discuss)
+
+* GIT remotes
+  - Protocols
+    + HTTP (LDAP login)
+    + SSH: key exchange supported
+    + GIT own: nah, not on standard port.
+    - Deployments are done with SSH and a readonly key login
+  - Can have many remotes: one is usually called origin (the one you cloned from)
+    - git remote add / rm
+    - git remote -v
