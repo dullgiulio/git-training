@@ -7,8 +7,8 @@
 * Commits: chain that points to the previous.
   - (This also of: linked lists)
   - There is a "root commit": just the fist commit you've made
-* Commits: stagin area
-	TODO
+  - Staging area: unlinked next commit object
+  - "--amend", "fixup!" etc.
 * Git objects:
   - blob: full files, not just delta. Faster on branching, saves ass sometimes.
   - tree: why can't commit an empty directory. Tree as collection of blobs.
@@ -23,18 +23,47 @@
   - (Like a filesystem with symlinks)
   - Which command to...? Figure out what you want to do to the graph, translate into git terms, google.
 
+* Reverting files
+  - In general: checkout changes the HEAD (symlink). Reset changes the commit the current branch points to.
+  - git checkout -- FILE # Revert to last committed version
+  - git reset --hard COMMIT # Sets branch and HEAD to this commit. Dangerous, like rebase.
+  - git revert COMMIT # Applies a reverse-patch for COMMIT as a new commit. Clean "undo" for pushed branches.
+
 * Branches:
   - Master is a branch like any other, just only conventional name
     - Same as SVN with trunk.
   - As it's a branch, it's just an alias to a commit (and its tree).
     - Any other branch would be the same
-  - A merge commit it's a commit with more than 1 parent. The names of the branches are in metadata.
+  - A merge commit it's a commit with more than 1 parent.
+    - The names of the branches are understood only by following labelled chains. Then there is the reflog...
     - You can easily make branches of branches.
   - Deleting a branch: removes the alias/label. If the commits are not merged, can be GC'ed.
 * Currently checked out branch: there is a symlink HEAD to the name of the branch.
   - Switching branch is as easy as chaning this symlink.
 * Tags: a branch moves every commit, tags remain still.
   - We won't use tags. (or...? Discuss)
+
+* Checkout
+  - "Detached head": if you checkout a commit, HEAD is detached: it should point to a branch but there is none.
+
+* Merges
+  - Fast Forwards
+  - Non-fast forward merges
+    - Several strategies
+	  - Default is very good
+	  - "git help merge"
+  - When resolving conflicts, git add the files
+  - Don't: create git repo, create files. Without committing, pull in remote.
+    You might "lose" your files (you can recover them, but you miss a beat).
+
+* Cherry Pick:
+ - Apply one commit like a patch, ignoring history
+   - Works because git commits ignore branches/provenance
+   - To be used sparingly:
+     - Duplicates commits (like duplicates code)
+	 - Not easy to undo
+	 - No info where the patch comes from: write these thigs in commit message
+	   - git cherry-pick --edit (!!!)
 
 * GIT remotes
   - Protocols
@@ -45,3 +74,29 @@
   - Can have many remotes: one is usually called origin (the one you cloned from)
     - git remote add / rm
     - git remote -v
+  - Git Pull: git fetch + git merge fast-forward
+    - Fetch: get the new commit objects, add new branches "origin/branch-name"
+	- Merges in fast forward
+	- If you don't want to merge, you can fetch and checkout.
+  - There is a thing called FETCH_HEAD.
+
+* Referring to a commit
+  - HEAD^1 vs HEAD~1
+    - First is for disambiguating which side of a merge to take
+	- Only take care if you are diff'ing with a merge commit in the way
+
+* Rebase
+  - Rewrite history:
+    $ git rebase -i
+    - why? Reorder/clear commits; make your work "fresh" relatively to other changes to make sure tests pass on merge.
+    - how? Replay commits on top of another chain.
+  - Problem: all SHA-1 change.
+    - Remember: SHA-1 includes SHA-1 of previous commits.
+	- If pushed breaks others.
+  - Case for rebasing: rebase when committing in a new branch.
+    $ git fetch origin some-branch
+	$ git checkout -b new-branch
+	$ git rebase some-branch # rebase on top of some-branch, you can then FF on that branch.
+  - Case for rebasing (2): rebase when mergin into another branch.
+    $ git merge --rebase --no-ff master # Merge my changes on master. Create a merge commit and let me edit the commits to merge before.
+  - Must be used cautiously: https://www.atlassian.com/git/articles/git-team-workflows-merge-or-rebase/

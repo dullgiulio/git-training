@@ -2,7 +2,7 @@
 
 First time git setup: https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup
 
-# Init new project
+## Init new project
 
 ```
 git init
@@ -34,9 +34,10 @@ git push origin master
 $ git diff --staged # sometimes you see: --cached; diff between what you added to the staged area and last commit (HEAD)
 $ git diff HEAD # diff with the last commit (HEAD) and your (unstaged) code
 $ git diff # diff between the staged files and the unstaged files (not usually what you want).
+$ git diff --cached origin/master # What would I push?
 ```
 
-See: [http://images.abizern.org.s3.amazonaws.com/365git/March10/GitDiffSimple.png] 
+See: http://images.abizern.org.s3.amazonaws.com/365git/March10/GitDiffSimple.png 
 
 ## Log and previous commits
 
