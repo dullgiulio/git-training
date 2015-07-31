@@ -29,6 +29,8 @@
   - git reset --hard COMMIT # Sets branch and HEAD to this commit. Dangerous, like rebase.
   - git revert COMMIT # Applies a reverse-patch for COMMIT as a new commit. Clean "undo" for pushed branches.
 
+* Mention git bisect
+
 * Branches:
   - Master is a branch like any other, just only conventional name
     - Same as SVN with trunk.
@@ -45,6 +47,7 @@
 
 * Checkout
   - "Detached head": if you checkout a commit, HEAD is detached: it should point to a branch but there is none.
+  - TODO: All uses of checkout
 
 * Merges
   - Fast Forwards
